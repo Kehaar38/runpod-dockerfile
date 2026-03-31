@@ -4,8 +4,7 @@ LABEL org.opencontainers.image.source="https://github.com/kehaar38/runpod-docker
 
 ENV DEBIAN_FRONTEND=noninteractive \
     HF_HOME=/workspace/.cache/huggingface \
-    HF_HUB_CACHE=/workspace/.cache/huggingface/hub \
-    CUDA_STUB=/usr/local/cuda/lib64/stubs
+    HF_HUB_CACHE=/workspace/.cache/huggingface/hub
 
 RUN mkdir -p /workspace/.cache/huggingface/hub
 
@@ -16,13 +15,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ninja-build \
     libcurl4-openssl-dev \
  && rm -rf /var/lib/apt/lists/*
-
-RUN ln -sf ${CUDA_STUB}/libcuda.so ${CUDA_STUB}/libcuda.so.1 && \
-    echo "${CUDA_STUB}" > /etc/ld.so.conf.d/cuda-stubs.conf && \
-    ldconfig
-
-ENV LIBRARY_PATH=${CUDA_STUB}:${LIBRARY_PATH}
-ENV LD_LIBRARY_PATH=${CUDA_STUB}:${LD_LIBRARY_PATH}
 
 WORKDIR /workspace
 RUN git clone --depth=1 https://github.com/ggml-org/llama.cpp.git
@@ -43,6 +35,8 @@ ENV LD_LIBRARY_PATH=/opt/llama/bin:${LD_LIBRARY_PATH}
 WORKDIR /workspace
 RUN rm -rf /workspace/llama.cpp
 
-EXPOSE 10000
+EXPOSE 8888 10000
+
+RUN jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root >/workspace/jupyter.log 2>&1 &
 
 CMD ["/opt/llama/bin/llama-server", "-hf", "unsloth/Qwen3.5-0.8B-GGUF:UD-Q4_K_M", "--port", "10000", "--host", "0.0.0.0", "--ctx-size", "65536"]
