@@ -1,5 +1,6 @@
-LABEL org.opencontainers.image.source="https://github.com/kehaar38/runpod-dockerfile"
 FROM runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404
+
+LABEL org.opencontainers.image.source="https://github.com/kehaar38/runpod-dockerfile"
 
 ENV HF_HOME=/workspace/.cache/huggingface \
     HF_HUB_CACHE=/workspace/.cache/huggingface/hub
