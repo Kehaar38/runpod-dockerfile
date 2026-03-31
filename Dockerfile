@@ -43,7 +43,6 @@ ENV LD_LIBRARY_PATH=/opt/llama/bin:${LD_LIBRARY_PATH}
 WORKDIR /workspace
 RUN rm -rf /workspace/llama.cpp
 
-EXPOSE 8888
 EXPOSE 10000
 
 CMD ["/opt/llama/bin/llama-server", "-hf", "unsloth/Qwen3.5-0.8B-GGUF:UD-Q4_K_M", "--port", "10000", "--host", "0.0.0.0", "--ctx-size", "65536"]
