@@ -1,6 +1,8 @@
 # ===== ビルド用ステージ =====
 FROM runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404 AS builder
 
+LABEL org.opencontainers.image.source="https://github.com/kehaar38/runpod-dockerfile"
+
 # 非対話化と、ビルド時にだけ使う CUDA stub の場所
 ENV DEBIAN_FRONTEND=noninteractive \
     CUDA_STUB=/usr/local/cuda/lib64/stubs
