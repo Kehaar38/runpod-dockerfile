@@ -2,20 +2,41 @@ FROM runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404
 
 LABEL org.opencontainers.image.source="https://github.com/kehaar38/runpod-dockerfile"
 
-ENV HF_HOME=/workspace/.cache/huggingface \
-    HF_HUB_CACHE=/workspace/.cache/huggingface/hub
+ENV DEBIAN_FRONTEND=noninteractive \
+    HF_HOME=/workspace/.cache/huggingface \
+    HF_HUB_CACHE=/workspace/.cache/huggingface/hub \
+    CUDA_STUB=/usr/local/cuda/lib64/stubs
 
 RUN mkdir -p /workspace/.cache/huggingface/hub
 
-WORKDIR /workspace
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    build-essential \
+    cmake \
+    ninja-build \
+    libcurl4-openssl-dev \
+ && rm -rf /var/lib/apt/lists/*
 
-RUN git clone https://github.com/ggml-org/llama.cpp.git
+# build 時に libcuda.so.1 を見つけられるように CUDA stub を使う
+RUN ln -sf ${CUDA_STUB}/libcuda.so ${CUDA_STUB}/libcuda.so.1 && \
+    echo "${CUDA_STUB}" > /etc/ld.so.conf.d/cuda-stubs.conf && \
+    ldconfig
+
+ENV LIBRARY_PATH=${CUDA_STUB}:${LIBRARY_PATH}
+ENV LD_LIBRARY_PATH=${CUDA_STUB}:${LD_LIBRARY_PATH}
+
+WORKDIR /workspace
+RUN git clone --depth=1 https://github.com/ggml-org/llama.cpp.git
 WORKDIR /workspace/llama.cpp
 
-RUN cmake -B build -DGGML_CUDA=ON && \
-    cmake --build build -j"$(nproc)" && \
-    cp build/bin/llama-* /usr/local/bin/
+RUN cmake -B build -G Ninja \
+    -DGGML_CUDA=ON \
+    -DLLAMA_BUILD_SERVER=ON \
+    -DLLAMA_BUILD_TESTS=OFF
 
+RUN cmake --build build -j1
+
+RUN cp build/bin/llama-server /usr/local/bin/
 WORKDIR /workspace
 RUN rm -rf /workspace/llama.cpp
 
