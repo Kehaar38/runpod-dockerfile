@@ -15,34 +15,14 @@
 
 デフォルトでは `unsloth/Qwen3.5-0.8B-GGUF` が起動します。
 
-```bash
-llama-server \
-  -hf unsloth/Qwen3.5-0.8B-GGUF:Q4_K_M \
-  --host 0.0.0.0 \
-  --port 10000 \
-  --ctx-size 65536 \
-  --n-gpu-layers 999 \
-  --threads 16 \
-  --threads-batch 16 \
-  --parallel 1
-```
+`llama-server -hf unsloth/Qwen3.5-0.8B-GGUF:Q4_K_M --host 0.0.0.0 --port 10000 --ctx-size 65536 --n-gpu-layers 999 --threads 16 --threads-batch 16 --parallel 1`
 ## モデルやオプションの変更
 
 デフォルトの `CMD` を上書きすることで、モデル名や各種オプションを変更できます。
 
 ### 例: `HauhauCS/Qwen3.5-35B-A3B-Uncensored-HauhauCS-Aggressive` を使う場合
 
-```bash
-llama-server \
-  -hf HauhauCS/Qwen3.5-35B-A3B-Uncensored-HauhauCS-Aggressive:Q4_K_M \
-  --host 0.0.0.0 \
-  --port 10000 \
-  --ctx-size 65536 \
-  --n-gpu-layers 999 \
-  --threads 16 \
-  --threads-batch 16 \
-  --parallel 1
-```
+`llama-server -hf HauhauCS/Qwen3.5-35B-A3B-Uncensored-HauhauCS-Aggressive:Q4_K_M --host 0.0.0.0 --port 10000 --ctx-size 65536 --n-gpu-layers 999 --threads 16 --threads-batch 16 --parallel 1`
 
 補足
 ビルド時のみ CUDA stub を使用しています。
