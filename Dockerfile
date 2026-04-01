@@ -21,7 +21,10 @@ RUN cmake -B build \
     -DBUILD_SHARED_LIBS=OFF \
 	-DGGML_CUDA=ON \
 	-DGGML_NATIVE=OFF \
-	-DLLAMA_CURL=ON
+	-DLLAMA_CURL=ON \
+	-DLLAMA_BUILD_BORINGSSL=ON \
+	-DLLAMA_BUILD_LIBRESSL=ON \
+	-DLLAMA_OPENSSL=ON
 
 RUN cmake --build build --config Release -t llama-server -j"$(nproc)"
 
