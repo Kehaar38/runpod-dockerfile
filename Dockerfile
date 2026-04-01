@@ -54,10 +54,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
  && rm -rf /var/lib/apt/lists/*
 
 # 実行ファイルをコピー
-COPY --from=builder /workspace/llama.cpp/build/bin/llama-server /usr/local/bin/
-
-# 共有ライブラリをコピー
-COPY --from=builder /workspace/llama.cpp/build/bin/lib*.so* /usr/local/lib/
+COPY --from=builder /workspace/llama.cpp/build/bin/* /usr/local/bin/
 
 # ライブラリキャッシュを更新
 RUN ldconfig
@@ -69,4 +66,4 @@ EXPOSE 10000
 
 # 既定では軽いモデルを起動
 # GPU優先、CPUスレッド控えめ、並列1で扱いやすい設定
-CMD ["llama-server", "-hf", "unsloth/Qwen3.5-0.8B-GGUF:Q4_K_M", "--host", "0.0.0.0", "--port", "10000", "--ctx-size", "65536", "--n-gpu-layers", "999", "--threads", "16", "--threads-batch", "16", "--parallel", "1"]
+CMD ["llama-server", "-hf", "unsloth/Qwen3.5-0.8B-GGUF:Q4_K_M", "--host", "0.0.0.0", "--port", "10000", "--ctx-size", "65536", "--n-gpu-layers", "999"]
