@@ -53,8 +53,4 @@ WORKDIR /workspace
 EXPOSE 10000
 
 # 既定では軽いモデルを起動
-CMD ["llama-server", \
-	"-hf", "unsloth/Qwen3.5-0.8B-GGUF:Q4_K_M", \
-	"--host", "0.0.0.0", \
-	"--port", "10000", \
-	"--ctx-size", "65536",]
+CMD ["llama-server", "-hf", "unsloth/Qwen3.5-0.8B-GGUF:Q4_K_M", "--host", "0.0.0.0", "--port", "10000", "--ctx-size", "65536",]
