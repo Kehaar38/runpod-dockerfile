@@ -21,10 +21,7 @@ RUN cmake -B build \
     -DBUILD_SHARED_LIBS=OFF \
 	-DGGML_CUDA=ON \
 	-DGGML_NATIVE=OFF \
-	-DLLAMA_CURL=ON \
-	-DLLAMA_BUILD_BORINGSSL=ON \
-	-DLLAMA_BUILD_LIBRESSL=ON \
-	-DLLAMA_OPENSSL=ON
+	-DLLAMA_CURL=ON
 
 RUN cmake --build build --config Release -t llama-server -j"$(nproc)"
 
@@ -53,7 +50,7 @@ RUN ldconfig
 WORKDIR /workspace
 
 # APIポート
-EXPOSE 10000
+EXPOSE 8080
 
 # 既定では軽いモデルを起動
-CMD ["llama-server", "-hf", "unsloth/Qwen3.5-0.8B-GGUF:Q4_K_M", "--host", "0.0.0.0", "--port", "10000", "--ctx-size", "65536",]
+CMD ["llama-server", "-hf", "unsloth/Qwen3.5-0.8B-GGUF:Q4_K_M", "--ctx-size", "65536"]
